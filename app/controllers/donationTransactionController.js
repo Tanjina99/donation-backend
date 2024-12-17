@@ -15,6 +15,10 @@ const createDonationTransaction = async (req, res) => {
         .send(response.status.status.NOT_FOUND, "Donation is not found");
     }
 
+    //update the donation amount
+    donation.amount += amount;
+    await donation.save();
+
     const transaction = new DonationTransaction({
       donorId,
       donationId,

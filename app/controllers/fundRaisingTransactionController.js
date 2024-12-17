@@ -1,19 +1,23 @@
 const FundRaising = require("../models/FundRaisingModel");
 const status = require("http-status");
 const response = require("../utils/response");
-const FundRaisingTransaction = require("../models/fundRaisingTransaction");
+const FundRaisingTransaction = require("../models/FundRaisingTransaction");
 
 //create transaction
 const createTransaction = async (req, res) => {
   try {
+    console.log(req.body);
     const { donorId, fundRaisingId, amount, message } = req.body;
     const fundRaising = await FundRaising.findById(fundRaisingId);
-
+    console.log(fundRaising);
     if (!fundRaising) {
       return res
         .status(status.status.NOT_FOUND)
         .send(response.status.status.NOT_FOUND, "Fundraising is not found");
     }
+
+    fundRaising.raisedAmount += amount;
+    const result = await fundRaising.save();
 
     const transaction = new FundRaisingTransaction({
       donorId,
@@ -23,9 +27,6 @@ const createTransaction = async (req, res) => {
     });
 
     await transaction.save();
-
-    fundRaising.raisedAmount += amount;
-    const result = await fundRaising.save();
 
     res
       .status(status.status.CREATED)

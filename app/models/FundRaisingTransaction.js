@@ -13,6 +13,7 @@ const fundRaisingTransactionSchema = new Schema(
       ref: "FundRaising",
       required: true,
     },
+
     amount: { type: Number, required: true },
     message: { type: String },
   },
